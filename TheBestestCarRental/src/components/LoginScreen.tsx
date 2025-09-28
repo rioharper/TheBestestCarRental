@@ -3,9 +3,10 @@ import './LoginScreen.css';
 
 interface LoginScreenProps {
   onLogin: (user: { email: string; name: string }) => void;
+  onBack?: () => void;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
