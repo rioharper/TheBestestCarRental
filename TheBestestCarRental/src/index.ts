@@ -8,14 +8,18 @@ class Car {
     make : string;
     model : string;
     availability : boolean;
+    seats: number;
+    price: number;
 
-    constructor(year: number, size: string, color: string, model: string, make: string, availability: boolean) {
+    constructor(year: number, size: string, color: string, model: string, make: string, availability: boolean, seats: number, price: number;) {
         this.year = year;
         this.size = size;
         this.color = color;
         this.make = make;
         this.model = model;
         this.availability = availability;
+        this.seats = seats;
+        this.price = price;
     }
 }
 
