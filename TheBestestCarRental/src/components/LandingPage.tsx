@@ -140,13 +140,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
                 </button>
               </div>
             </div>
-
-            <div className="search-options">
-              <label className="option-checkbox suv-only">
-                <input type="checkbox" />
-                SUVs only
-              </label>
-            </div>
           </div>
         </div>
       </main>

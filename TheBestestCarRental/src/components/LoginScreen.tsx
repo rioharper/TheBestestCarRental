@@ -70,9 +70,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack }) => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>🚗 The Bestest Car Rental</h1>
-          <h2>{isSignUp ? 'Create Account' : 'Welcome Back'}</h2>
-          <p>{isSignUp ? 'Sign up to get started' : 'Sign in to your account'}</p>
+          <span className="logo-text">THE BESTEST</span>
         </div>
 
         <form onSubmit={handleEmailLogin} className="login-form">
@@ -145,25 +143,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack }) => {
             <p>New here? <button type="button" className="create-account-btn" onClick={handleCreateAccount}>Create an account</button></p>
           </div>
         )}
-
-        <div className="switch-mode">
-          <p>
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <button
-              type="button"
-              className="switch-btn"
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setError('');
-                setEmail('');
-                setPassword('');
-                setName('');
-              }}
-            >
-              {isSignUp ? 'Sign In' : 'Sign Up'}
-            </button>
-          </p>
-        </div>
       </div>
     </div>
   );
