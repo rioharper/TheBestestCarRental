@@ -269,27 +269,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
           </div>
 
           <div className="search-form">
-            <div className="dropoff-toggle">
-              <label className="toggle-label">
-                <input
-                  type="checkbox"
-                  checked={sameDropoff}
-                  onChange={(e) => setSameDropoff(e.target.checked)}
-                />
-                Same drop-off
-              </label>
-            </div>
 
             <div className="search-inputs">
-              <div className="location-input">
-                <input
-                  type="text"
-                  placeholder="Pick-up location"
-                  value={pickupLocation}
-                  onChange={(e) => setPickupLocation(e.target.value)}
-                  className="location-field"
-                />
-              </div>
+              
 
               <div className="date-time-group">
                 <div className="date-input">
