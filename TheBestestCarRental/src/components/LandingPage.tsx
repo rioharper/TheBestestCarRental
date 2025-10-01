@@ -13,6 +13,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
   const [dropoffTime, setDropoffTime] = useState('Noon');
   const [sameDropoff, setSameDropoff] = useState(true);
   const [selectedCarType, setSelectedCarType] = useState('all');
+  const [priceRange, setPriceRange] = useState([10, 500]);
+  const [seatCount, setSeatCount] = useState(2);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
   const carTypes = [
     { id: 'all', name: 'All Cars', icon: '🚗' },
@@ -23,6 +27,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
     { id: 'luxury', name: 'Luxury', icon: '🏎️' },
   ];
 
+  const colors = [
+    { id: 'black', name: 'Black', color: '#000000' },
+    { id: 'white', name: 'White', color: '#FFFFFF' },
+    { id: 'silver', name: 'Silver', color: '#C0C0C0' },
+    { id: 'red', name: 'Red', color: '#DC143C' },
+    { id: 'blue', name: 'Blue', color: '#1E90FF' },
+  ];
+
+  const brands = [
+    { id: 'toyota', name: 'Toyota' },
+    { id: 'ford', name: 'Ford' },
+    { id: 'chevrolet', name: 'Chevrolet' },
+    { id: 'honda', name: 'Honda' },
+    { id: 'nissan', name: 'Nissan' },
+    { id: 'bmw', name: 'BMW' },
+  ];
+
+  const handleColorToggle = (colorId: string) => {
+    setSelectedColors(prev => 
+      prev.includes(colorId) 
+        ? prev.filter(id => id !== colorId)
+        : [...prev, colorId]
+    );
+  };
+
+  const handleBrandToggle = (brandId: string) => {
+    setSelectedBrands(prev => 
+      prev.includes(brandId) 
+        ? prev.filter(id => id !== brandId)
+        : [...prev, brandId]
+    );
+  };
+
   const handleSearch = () => {
     console.log('Search for cars:', {
       pickupLocation,
@@ -30,7 +67,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
       pickupTime,
       dropoffDate,
       dropoffTime,
-      selectedCarType
+      selectedCarType,
+      priceRange,
+      seatCount,
+      selectedColors,
+      selectedBrands
     });
     // TODO: Implement search functionality
   };
@@ -71,6 +112,160 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
                 <span className="car-name">{type.name}</span>
               </button>
             ))}
+          </div>
+
+          {/* Additional Filter Sections */}
+          <div className="filter-sections">
+            {/* Price Section */}
+            <div className="filter-section">
+              <h3 className="filter-header">Price</h3>
+              <div className="price-slider-container">
+                <div className="price-range-display">
+                  ${priceRange[0]}/day - ${priceRange[1]}/day
+                </div>
+                
+                {/* Minimum Price Controls */}
+                <div className="price-control-group">
+                  <label className="price-label">Minimum</label>
+                  <div className="price-controls">
+                    <button 
+                      className="price-btn price-btn-minus"
+                      onClick={() => setPriceRange([Math.max(10, priceRange[0] - 10), priceRange[1]])}
+                      disabled={priceRange[0] <= 10}
+                    >
+                      −
+                    </button>
+                    <span className="price-value">${priceRange[0]}</span>
+                    <button 
+                      className="price-btn price-btn-plus"
+                      onClick={() => setPriceRange([Math.min(priceRange[1] - 10, priceRange[0] + 10), priceRange[1]])}
+                      disabled={priceRange[0] >= priceRange[1] - 10}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Maximum Price Controls */}
+                <div className="price-control-group">
+                  <label className="price-label">Maximum</label>
+                  <div className="price-controls">
+                    <button 
+                      className="price-btn price-btn-minus"
+                      onClick={() => setPriceRange([priceRange[0], Math.max(priceRange[0] + 10, priceRange[1] - 10)])}
+                      disabled={priceRange[1] <= priceRange[0] + 10}
+                    >
+                      −
+                    </button>
+                    <span className="price-value">${priceRange[1]}</span>
+                    <button 
+                      className="price-btn price-btn-plus"
+                      onClick={() => setPriceRange([priceRange[0], Math.min(500, priceRange[1] + 10)])}
+                      disabled={priceRange[1] >= 500}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Number of Seats Section */}
+            <div className="filter-section">
+              <h3 className="filter-header">Number of Seats</h3>
+              <div className="seat-container">
+                <div className="seat-count-display">
+                  {seatCount} seats
+                </div>
+                <div className="seat-layout-visual">
+                  {/* Car outline with seats */}
+                  <div className="car-outline">
+                    {/* Front row - always has 2 seats (driver + passenger) */}
+                    <div className="front-row">
+                      <div className={`seat ${seatCount >= 1 ? 'active' : ''}`}>💺</div>
+                      <div className={`seat ${seatCount >= 2 ? 'active' : ''}`}>💺</div>
+                    </div>
+                    
+                    {/* Second row */}
+                    {seatCount >= 3 && (
+                      <div className="second-row">
+                        <div className="seat active">💺</div>
+                        {seatCount >= 4 && <div className="seat active">💺</div>}
+                      </div>
+                    )}
+                    
+                    {/* Third row */}
+                    {seatCount >= 5 && (
+                      <div className="third-row">
+                        <div className="seat active">💺</div>
+                        {seatCount >= 6 && <div className="seat active">💺</div>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="seat-controls">
+                  <button 
+                    className="seat-btn seat-btn-minus"
+                    onClick={() => setSeatCount(Math.max(2, seatCount - 1))}
+                    disabled={seatCount <= 2}
+                  >
+                    −
+                  </button>
+                  <span className="seat-counter">{seatCount}</span>
+                  <button 
+                    className="seat-btn seat-btn-plus"
+                    onClick={() => setSeatCount(Math.min(6, seatCount + 1))}
+                    disabled={seatCount >= 6}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Color Section */}
+            <div className="filter-section">
+              <h3 className="filter-header">
+                Color
+                {selectedColors.length > 0 && (
+                  <span className="selection-count">{selectedColors.length}</span>
+                )}
+              </h3>
+              <div className="color-options">
+                {colors.map((color) => (
+                  <button
+                    key={color.id}
+                    className={`color-option ${selectedColors.includes(color.id) ? 'active' : ''}`}
+                    onClick={() => handleColorToggle(color.id)}
+                    style={{ backgroundColor: color.color }}
+                    title={color.name}
+                  >
+                    {selectedColors.includes(color.id) && <span className="color-check">✓</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Brand Section */}
+            <div className="filter-section">
+              <h3 className="filter-header">
+                Brand
+                {selectedBrands.length > 0 && (
+                  <span className="selection-count">{selectedBrands.length}</span>
+                )}
+              </h3>
+              <div className="brand-options">
+                {brands.map((brand) => (
+                  <button
+                    key={brand.id}
+                    className={`brand-option ${selectedBrands.includes(brand.id) ? 'active' : ''}`}
+                    onClick={() => handleBrandToggle(brand.id)}
+                  >
+                    {brand.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="search-form">
