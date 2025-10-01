@@ -1,4 +1,5 @@
 import express from "express"
+import type { Request, Response} from "express";
 
 
 class Car {
@@ -31,16 +32,25 @@ class User {
         this.userId = userID;
         this.password = password;
     }
+
+    makeReservation(cus: customer, car: Car) : boolean {
+        if (car.availability == false) {
+            return false;
+        }
+        car.availability = false;
+        cus.checkedOutCar = car;
+        return true;
+    }
 }
 
 class customer extends User {
-        checkedOut: boolean;
+        checkedOutCar: Car;
         driversLicenseNumber: number;
 
-    constructor(userId: string, password: string, driversLicenseNumber: number, checkedOut: boolean) {
+    constructor(userId: string, password: string, driversLicenseNumber: number, checkedOutCar: Car) {
         super(userId, password);
         this.driversLicenseNumber = driversLicenseNumber;
-        this.checkedOut = checkedOut;
+        this.checkedOutCar = checkedOutCar;
     }
 }
 
