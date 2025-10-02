@@ -1,3 +1,10 @@
 /Frontend/placehold.txt
 /Backend/placehold.txt
 node_modules
+
+# Ignore local SQLite files
+data/*.sqlite3
+data/*.db
+*.sqlite3
+*.db
+*.db-journal
