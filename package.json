@@ -4,6 +4,11 @@
     "@types/node": "^24.5.2",
     "firebase": "^12.3.0",
     "lucide-react": "^0.544.0",
-    "react-router-dom": "^7.9.3"
+    "react-router-dom": "^7.9.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/sqlite3": "^3.1.11"
   }
 }
