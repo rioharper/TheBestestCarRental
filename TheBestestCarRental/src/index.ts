@@ -1,6 +1,46 @@
 import express from "express"
 import type { Request, Response} from "express";
 
+import sqlite3 from "sqlite3"
+import { open } from "sqlite";
+
+
+const app = express();
+app.use(express.json());
+
+let db: Awaited<ReturnType<typeof open>>;
+
+async function init() {
+    db = await open({
+        filename: "database.db",
+        driver: sqlite3.Database,
+    });
+
+    app.listen(401, () => {});
+    // idk if this needs to be same as server, just running it at this port for now
+}
+
+
+//example login function
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await db.get("SELECT * FROM users WHERE email = ?", [email]);
+
+  if (!user) {
+    res.status(400).json({ success: false, message: "User not found" });
+    return;
+  }
+
+  if (user.password === password) {
+    res.json({ success: true, message: "Login successful" });
+  } else {
+    res.status(400).json({ success: false, message: "Incorrect password" });
+  }
+});
+
+
+
 
 class Car {
     year: number;
@@ -33,24 +73,24 @@ class User {
         this.password = password;
     }
 
-    makeReservation(cus: customer, car: Car) : boolean {
+    /*makeReservation(cus: customer, car: Car) : boolean {
         if (car.availability == false) {
             return false;
         }
         car.availability = false;
-        cus.checkedOutCar = car;
         return true;
     }
+    */    
 }
 
 class customer extends User {
-        checkedOutCar: Car;
+        reservation: Reservation;
         driversLicenseNumber: number;
 
-    constructor(userId: string, password: string, driversLicenseNumber: number, checkedOutCar: Car) {
+    constructor(userId: string, password: string, driversLicenseNumber: number, reservation: Reservation) {
         super(userId, password);
         this.driversLicenseNumber = driversLicenseNumber;
-        this.checkedOutCar = checkedOutCar;
+        this.reservation = reservation;
     }
 }
 
@@ -62,16 +102,18 @@ class Admin extends User {
 
 
 class Reservation {
-    reservationId : string
+    reservationId : string;
     startDate : Date;
     endDate : Date;
     status : boolean;
+    car: Car
 
-    constructor(reservationId : string, startDate : Date, endDate : Date, status : boolean) {
+    constructor(reservationId : string, startDate : Date, endDate : Date, status : boolean, car: Car) {
         this.reservationId = reservationId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.car = car;
     }
 }
 
@@ -89,3 +131,5 @@ class Payment {
         this.status = status;
     }
 }
+
+init();
