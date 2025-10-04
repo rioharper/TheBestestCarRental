@@ -32,8 +32,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
     { id: 'sedan', name: 'Sedan', icon: '🚙' },
     { id: 'suv', name: 'SUV', icon: '🚐' },
     { id: 'truck', name: 'Truck', icon: '🛻' },
-    { id: 'minibus', name: 'Minibus', icon: '🚌' },
+    { id: 'van', name: 'Van', icon: '🚌' },
     { id: 'luxury', name: 'Luxury', icon: '🏎️' },
+    { id: 'compact', name: 'Compact', icon: '🚘' },
   ];
 
   const colors = [
@@ -51,6 +52,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
     { id: 'honda', name: 'Honda' },
     { id: 'hyundai', name: 'Hyundai' },
     { id: 'bmw', name: 'BMW' },
+    { id: 'kia', name: 'Kia' },
   ];
 
   const handleColorToggle = (colorId: string) => {
