@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SignUpScreen.css';
+import { initDatabase, createUser, getUserByEmail } from '../utils/database';
 
 interface SignUpScreenProps {
   onSignUp: (user: { 
@@ -21,6 +22,20 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack, onSignIn 
   const [driversLicense, setDriversLicense] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [dbInitialized, setDbInitialized] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await initDatabase();
+        setDbInitialized(true);
+      } catch (err) {
+        setError('Failed to initialize database');
+        console.error('Database initialization error:', err);
+      }
+    };
+    init();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,19 +80,44 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack, onSignIn 
     }
 
     try {
-      // Simulate account creation API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (!dbInitialized) {
+        setError('Database not ready. Please wait...');
+        setLoading(false);
+        return;
+      }
+
+      // Check if user already exists
+      const existingUser = getUserByEmail(email.trim());
+      if (existingUser) {
+        setError('An account with this email already exists. Please sign in instead.');
+        setLoading(false);
+        return;
+      }
+
+      // Create new user in database
+      const fullName = `${firstName.trim()} ${lastName.trim()}`;
+      const newUser = createUser(email.trim(), password, fullName);
       
-      const user = {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
-        driversLicense: driversLicense.trim()
-      };
-      
-      onSignUp(user);
+      if (newUser) {
+        // Account created successfully, pass user data to parent
+        const user = {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          driversLicense: driversLicense.trim()
+        };
+        
+        onSignUp(user);
+      } else {
+        setError('Account creation failed. Please try again.');
+      }
     } catch (err) {
-      setError('Account creation failed. Please try again.');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Account creation failed. Please try again.');
+      }
+      console.error('Sign up error:', err);
     } finally {
       setLoading(false);
     }

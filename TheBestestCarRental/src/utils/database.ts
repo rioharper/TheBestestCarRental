@@ -113,6 +113,22 @@ export function authenticateUser(email: string, password: string): User | null {
   };
 }
 
+export function createUser(email: string, password: string, name: string): User | null {
+  const db = getDatabase();
+  
+  // Check if user already exists
+  const existingUser = getUserByEmail(email);
+  if (existingUser) {
+    throw new Error('User with this email already exists');
+  }
+  
+  // Insert new user
+  db.run('INSERT INTO users (email, password, name) VALUES (?, ?, ?)', [email, password, name]);
+  
+  // Return the newly created user
+  return getUserByEmail(email);
+}
+
 // Car operations
 export function getAllCars(): Car[] {
   const db = getDatabase();
