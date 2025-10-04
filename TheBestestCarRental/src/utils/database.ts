@@ -25,41 +25,54 @@ export async function initDatabase(): Promise<Database> {
     locateFile: (file) => `https://sql.js.org/dist/${file}`
   });
 
-  db = new SQL.Database();
+  // Load the existing database file
+  try {
+    const response = await fetch('/datebase.db');
+    if (response.ok) {
+      const buffer = await response.arrayBuffer();
+      db = new SQL.Database(new Uint8Array(buffer));
+      console.log('Database loaded from datebase.db');
+    } else {
+      console.warn('Could not load datebase.db, creating new database');
+      db = new SQL.Database();
+      
+      // Create tables only if we couldn't load the existing database
+      db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email TEXT UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          name TEXT NOT NULL
+        )
+      `);
 
-  // Create users table
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      name TEXT NOT NULL
-    )
-  `);
+      db.run(`
+        CREATE TABLE IF NOT EXISTS cars (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          make TEXT NOT NULL,
+          model TEXT NOT NULL,
+          year INTEGER NOT NULL,
+          pricePerDay REAL NOT NULL,
+          available INTEGER DEFAULT 1
+        )
+      `);
 
-  // Create cars table
-  db.run(`
-    CREATE TABLE IF NOT EXISTS cars (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      make TEXT NOT NULL,
-      model TEXT NOT NULL,
-      year INTEGER NOT NULL,
-      pricePerDay REAL NOT NULL,
-      available INTEGER DEFAULT 1
-    )
-  `);
+      // Insert example data
+      db.run(`
+        INSERT OR IGNORE INTO users (id, email, password, name) 
+        VALUES (1, 'demo@example.com', 'password123', 'Demo User')
+      `);
 
-  // Insert example user
-  db.run(`
-    INSERT OR IGNORE INTO users (id, email, password, name) 
-    VALUES (1, 'demo@example.com', 'password123', 'Demo User')
-  `);
-
-  // Insert example car
-  db.run(`
-    INSERT OR IGNORE INTO cars (id, make, model, year, pricePerDay, available) 
-    VALUES (1, 'Toyota', 'Camry', 2023, 45.99, 1)
-  `);
+      db.run(`
+        INSERT OR IGNORE INTO cars (id, make, model, year, pricePerDay, available) 
+        VALUES (1, 'Toyota', 'Camry', 2023, 45.99, 1)
+      `);
+    }
+  } catch (error) {
+    console.error('Error loading database:', error);
+    // Fallback to creating a new database
+    db = new SQL.Database();
+  }
 
   return db;
 }
