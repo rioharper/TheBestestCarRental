@@ -99,6 +99,20 @@ export function getUserByEmail(email: string): User | null {
   };
 }
 
+export function authenticateUser(email: string, password: string): User | null {
+  const db = getDatabase();
+  const result = db.exec('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
+  if (result.length === 0 || result[0].values.length === 0) return null;
+  
+  const row = result[0].values[0];
+  return {
+    id: row[0] as number,
+    email: row[1] as string,
+    password: row[2] as string,
+    name: row[3] as string,
+  };
+}
+
 // Car operations
 export function getAllCars(): Car[] {
   const db = getDatabase();

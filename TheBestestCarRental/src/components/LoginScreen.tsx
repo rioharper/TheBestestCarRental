@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginScreen.css';
+import { initDatabase, authenticateUser } from '../utils/database';
 
 interface LoginScreenProps {
   onLogin: (user: { email: string; name: string }) => void;
@@ -14,6 +15,20 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack, onSignUpClic
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [dbInitialized, setDbInitialized] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await initDatabase();
+        setDbInitialized(true);
+      } catch (err) {
+        setError('Failed to initialize database');
+        console.error('Database initialization error:', err);
+      }
+    };
+    init();
+  }, []);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,20 +36,33 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack, onSignUpClic
     setError('');
 
     try {
-      // Simulate API call - replace with your actual authentication logic
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (email && password) {
-        const user = {
-          email,
-          name: isSignUp ? name : email.split('@')[0]
-        };
-        onLogin(user);
-      } else {
+      if (!dbInitialized) {
+        setError('Database not ready. Please wait...');
+        setLoading(false);
+        return;
+      }
+
+      if (!email || !password) {
         setError('Please fill in all fields');
+        setLoading(false);
+        return;
+      }
+
+      // Authenticate user against the database
+      const user = authenticateUser(email, password);
+      
+      if (user) {
+        // Login successful
+        onLogin({
+          email: user.email,
+          name: user.name
+        });
+      } else {
+        setError('Invalid email or password. Please try again.');
       }
     } catch (err) {
       setError('Login failed. Please try again.');
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
