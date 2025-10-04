@@ -83,3 +83,4 @@ const CarCard: React.FC<CarCardProps> = ({
   );
 };
 
+export default CarCard;
