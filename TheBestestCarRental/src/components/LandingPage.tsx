@@ -32,14 +32,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
     { id: 'sedan', name: 'Sedan', icon: '🚙' },
     { id: 'suv', name: 'SUV', icon: '🚐' },
     { id: 'truck', name: 'Truck', icon: '🛻' },
-    { id: 'minibus', name: 'Minibus', icon: '🚌' },
+    { id: 'van', name: 'Van', icon: '🚌' },
     { id: 'luxury', name: 'Luxury', icon: '🏎️' },
+    { id: 'compact', name: 'Compact', icon: '🚘' },
   ];
 
   const colors = [
     { id: 'black', name: 'Black', color: '#000000' },
     { id: 'white', name: 'White', color: '#FFFFFF' },
-    { id: 'silver', name: 'Silver', color: '#C0C0C0' },
+  { id: 'grey', name: 'Grey', color: '#C0C0C0' },
     { id: 'red', name: 'Red', color: '#DC143C' },
     { id: 'blue', name: 'Blue', color: '#1E90FF' },
   ];
@@ -47,10 +48,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
   const brands = [
     { id: 'toyota', name: 'Toyota' },
     { id: 'ford', name: 'Ford' },
-    { id: 'chevrolet', name: 'Chevrolet' },
+    { id: 'tesla', name: 'Tesla' },
     { id: 'honda', name: 'Honda' },
-    { id: 'nissan', name: 'Nissan' },
+    { id: 'hyundai', name: 'Hyundai' },
     { id: 'bmw', name: 'BMW' },
+    { id: 'kia', name: 'Kia' },
   ];
 
   const handleColorToggle = (colorId: string) => {
@@ -69,19 +71,24 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
     );
   };
 
+  const [filteredCars, setFilteredCars] = useState<typeof cars>([]);
+  const [hasSearched, setHasSearched] = useState(false);
   const handleSearch = () => {
-    console.log('Search for cars:', {
-      pickupDate,
-      pickupTime,
-      dropoffDate,
-      dropoffTime,
-      selectedCarType,
-      priceRange,
-      seatCount,
-      selectedColors,
-      selectedBrands
+    setHasSearched(true);
+    const filtered = cars.filter(car => {
+      // Car type
+      const typeMatch = selectedCarType === 'all' || (car.size && car.size.toLowerCase() === selectedCarType);
+      // Price
+      const priceMatch = car.price >= priceRange[0] && car.price <= priceRange[1];
+      // Seats
+      const seatMatch = car.seats >= seatCount;
+      // Color
+      const colorMatch = selectedColors.length === 0 || selectedColors.includes(car.color?.toLowerCase());
+      // Brand
+      const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(car.make?.toLowerCase());
+      return typeMatch && priceMatch && seatMatch && colorMatch && brandMatch;
     });
-    // TODO: Implement search functionality
+    setFilteredCars(filtered);
   };
 
   const handleCarBookNow = (car: any) => {
@@ -393,11 +400,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
           <h1>Available Cars</h1>
           {!isInitialized ? (
             <p>Loading cars...</p>
-          ) : cars.length === 0 ? (
-            <p>No cars available at the moment.</p>
+          ) : !hasSearched ? (
+            <p>Use the filters and click the search button to see available cars.</p>
+          ) : filteredCars.length === 0 ? (
+            <p>No cars match your search criteria.</p>
           ) : (
             <div className="car-grid">
-              {cars.map((car) => (
+              {filteredCars.map((car) => (
                 <CarCard
                   key={car.id}
                   id={car.id.toString()}
