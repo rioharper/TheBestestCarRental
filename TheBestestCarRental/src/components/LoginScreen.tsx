@@ -71,12 +71,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack, onSignUpClic
 
 
   const handleCreateAccount = () => {
-    console.log('Create account clicked, onSignUpClick:', onSignUpClick);
     if (onSignUpClick) {
       onSignUpClick();
     } else {
-      // Fallback for when onSignUpClick is not provided
-      console.log('Navigate to registration page');
       alert('Registration page will be implemented next!');
     }
   };

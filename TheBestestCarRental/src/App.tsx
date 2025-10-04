@@ -6,9 +6,6 @@ import SignUpScreen from './components/SignUpScreen'
 import BookingPage from './components/BookingPage'
 import { isAdminByEmail } from './utils/database'
 
-
-import './App.css'
-
 interface User {
   email: string;
   name: string;
@@ -47,12 +44,10 @@ function App() {
 
   const handleLogin = (userData: User) => {
     setUser(userData);
-    // Check if user is an admin
     const adminStatus = isAdminByEmail(userData.email);
     setIsUserAdmin(adminStatus);
     setShowLogin(false);
     setShowSignUp(false);
-    console.log('User logged in:', userData, 'Is Admin:', adminStatus);
   };
 
   const handleSignUp = (userData: { 
@@ -66,12 +61,10 @@ function App() {
       name: `${userData.firstName} ${userData.lastName}`
     };
     setUser(user);
-    // Check if user is an admin
     const adminStatus = isAdminByEmail(user.email);
     setIsUserAdmin(adminStatus);
     setShowSignUp(false);
     setShowLogin(false);
-    console.log('User signed up:', userData, 'Is Admin:', adminStatus);
   };
 
   const handleLogout = () => {
@@ -82,7 +75,6 @@ function App() {
     setShowBooking(false);
     setBookingData(null);
     setUserBookings([]);
-    console.log('User logged out');
   };
 
   const handleSignInClick = () => {
@@ -115,9 +107,6 @@ function App() {
   };
 
   const handleConfirmBooking = (completeBookingData: any) => {
-    console.log('Booking confirmed:', completeBookingData);
-    
-    // Add booking to user's bookings
     const newBooking: Booking = {
       id: `booking-${Date.now()}`,
       ...completeBookingData
