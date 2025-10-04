@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
 
-interface LandingPageProps {
-  onSignInClick: () => void;
+interface User {
+  email: string;
+  name: string;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
+interface LandingPageProps {
+  onSignInClick: () => void;
+  user?: User | null;
+  onLogout?: () => void;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout }) => {
   const [pickupLocation, setPickupLocation] = useState('');
   const [pickupDate, setPickupDate] = useState('');
   const [pickupTime, setPickupTime] = useState('Noon');
@@ -88,9 +95,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick }) => {
             <button className="nav-item">My Bookings</button>          </nav>
           <div className="header-actions">
             <button className="favorites-btn">♡</button>
-            <button className="signin-btn" onClick={onSignInClick}>
-              👤 Sign in
-            </button>
+            {user ? (
+              <>
+                <span className="user-welcome">Welcome, {user.name}!</span>
+                <button className="logout-btn" onClick={onLogout}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button className="signin-btn" onClick={onSignInClick}>
+                👤 Sign in
+              </button>
+            )}
           </div>
         </div>
       </header>
