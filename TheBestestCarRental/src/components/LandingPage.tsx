@@ -94,7 +94,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
             <button className="nav-item active">Cars</button>
             <button className="nav-item">My Bookings</button>          </nav>
           <div className="header-actions">
-            <button className="favorites-btn">♡</button>
             {user ? (
               <>
                 <span className="user-welcome">Welcome, {user.name}!</span>
@@ -151,7 +150,23 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
                     >
                       −
                     </button>
-                    <span className="price-value">${priceRange[0]}</span>
+                    <input
+                      type="number"
+                      className="price-value price-input"
+                      value={priceRange[0]}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 10;
+                        const newMin = Math.max(10, Math.min(value, priceRange[1] - 10));
+                        setPriceRange([newMin, priceRange[1]]);
+                      }}
+                      onBlur={(e) => {
+                        const value = parseInt(e.target.value) || 10;
+                        const newMin = Math.max(10, Math.min(value, priceRange[1] - 10));
+                        setPriceRange([newMin, priceRange[1]]);
+                      }}
+                      min="10"
+                      max={priceRange[1] - 10}
+                    />
                     <button 
                       className="price-btn price-btn-plus"
                       onClick={() => setPriceRange([Math.min(priceRange[1] - 10, priceRange[0] + 10), priceRange[1]])}
@@ -173,7 +188,23 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
                     >
                       −
                     </button>
-                    <span className="price-value">${priceRange[1]}</span>
+                    <input
+                      type="number"
+                      className="price-value price-input"
+                      value={priceRange[1]}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 500;
+                        const newMax = Math.min(500, Math.max(value, priceRange[0] + 10));
+                        setPriceRange([priceRange[0], newMax]);
+                      }}
+                      onBlur={(e) => {
+                        const value = parseInt(e.target.value) || 500;
+                        const newMax = Math.min(500, Math.max(value, priceRange[0] + 10));
+                        setPriceRange([priceRange[0], newMax]);
+                      }}
+                      min={priceRange[0] + 10}
+                      max="500"
+                    />
                     <button 
                       className="price-btn price-btn-plus"
                       onClick={() => setPriceRange([priceRange[0], Math.min(500, priceRange[1] + 10)])}

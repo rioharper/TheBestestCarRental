@@ -31,20 +31,10 @@ const CarCard: React.FC<CarCardProps> = ({
       {/* Image Section */}
       <div className="car-card-image-section">
         <img 
-          src={imageUrl} 
+          src={`/car_images/${imageUrl}.jpg`} 
           alt={`${make} ${model}`}
           className="car-card-image"
         />
-        <button 
-          onClick={() => setIsFavorite(!isFavorite)}
-          className={`car-card-favorite-btn ${isFavorite ? 'active' : ''}`}
-        >
-          <Heart 
-            size={20} 
-            fill={isFavorite ? '#ff6b35' : 'none'}
-            stroke={isFavorite ? '#ff6b35' : '#999'}
-          />
-        </button>
       </div>
 
       {/* Content Section */}

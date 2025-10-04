@@ -329,6 +329,30 @@
   border: 1px solid #ddd;
 }
 
+.price-value.price-input {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.price-value.price-input::-webkit-outer-spin-button,
+.price-value.price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.price-value.price-input:hover {
+  border-color: #bbb;
+  background: #fff;
+}
+
+.price-value.price-input:focus {
+  border-color: #ff6b35;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+}
+
 /* Seat Selection */
 .seat-container {
   text-align: center;
