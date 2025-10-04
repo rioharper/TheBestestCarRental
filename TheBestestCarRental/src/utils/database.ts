@@ -1,3 +1,78 @@
+// Add a new car
+export function addCar(car: {
+  year: number;
+  size: string;
+  make: string;
+  model: string;
+  availability: number;
+  seats: number;
+  price: number;
+  imageUrl: string;
+  color: string;
+}): void {
+  const db = getDatabase();
+  db.run(
+    'INSERT INTO cars (year, size, make, model, availability, seats, price, image, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [car.year, car.size, car.make, car.model, car.availability, car.seats, car.price, car.imageUrl, car.color]
+  );
+  saveDatabase();
+}
+
+// Update an existing car by id
+export function updateCar(id: number, car: {
+  year: number;
+  size: string;
+  make: string;
+  model: string;
+  availability: number;
+  seats: number;
+  price: number;
+  imageUrl: string;
+  color: string;
+}): void {
+  const db = getDatabase();
+  db.run(
+    'UPDATE cars SET year = ?, size = ?, make = ?, model = ?, availability = ?, seats = ?, price = ?, image = ?, color = ? WHERE id = ?',
+    [car.year, car.size, car.make, car.model, car.availability, car.seats, car.price, car.imageUrl, car.color, id]
+  );
+  saveDatabase();
+}
+
+// Add a new reservation
+export function addReservation(res: {
+  startDate: string;
+  endDate: string;
+  status: number;
+  carId: number;
+}): void {
+  const db = getDatabase();
+  db.run(
+    'INSERT INTO reservations (startDate, endDate, status, carId) VALUES (?, ?, ?, ?)',
+    [res.startDate, res.endDate, res.status, res.carId]
+  );
+  saveDatabase();
+}
+// Reservation operations
+export interface Reservation {
+  id: number;
+  startDate: string;
+  endDate: string;
+  status: number;
+  carId: number;
+}
+
+export function getAllReservations(): Reservation[] {
+  const db = getDatabase();
+  const result = db.exec('SELECT * FROM reservations');
+  if (result.length === 0) return [];
+  return result[0].values.map(row => ({
+    id: row[0] as number,
+    startDate: row[1] as string,
+    endDate: row[2] as string,
+    status: row[3] as number,
+    carId: row[4] as number,
+  }));
+}
 import initSqlJs, { type Database } from 'sql.js';
 
 let db: Database | null = null;
