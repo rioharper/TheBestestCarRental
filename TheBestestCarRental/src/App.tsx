@@ -20,12 +20,27 @@ interface BookingData {
   dropoffTime: string;
 }
 
+interface Booking {
+  id: string;
+  car: any;
+  pickupDate: string;
+  pickupTime: string;
+  dropoffDate: string;
+  dropoffTime: string;
+  totalPrice: number;
+  days: number;
+  payment: any;
+  user: User;
+  timestamp: string;
+}
+
 function App() {
   const [user, setUser] = useState<User | null>(null)
   const [showLogin, setShowLogin] = useState(false)
   const [showSignUp, setShowSignUp] = useState(false)
   const [showBooking, setShowBooking] = useState(false)
   const [bookingData, setBookingData] = useState<BookingData | null>(null)
+  const [userBookings, setUserBookings] = useState<Booking[]>([])
 
   const handleLogin = (userData: User) => {
     setUser(userData);
@@ -56,6 +71,7 @@ function App() {
     setShowSignUp(false);
     setShowBooking(false);
     setBookingData(null);
+    setUserBookings([]);
     console.log('User logged out');
   };
 
@@ -90,7 +106,14 @@ function App() {
 
   const handleConfirmBooking = (completeBookingData: any) => {
     console.log('Booking confirmed:', completeBookingData);
-    // TODO: Save booking to database
+    
+    // Add booking to user's bookings
+    const newBooking: Booking = {
+      id: `booking-${Date.now()}`,
+      ...completeBookingData
+    };
+    setUserBookings(prev => [...prev, newBooking]);
+    
     alert(`Booking confirmed for ${completeBookingData.car.make} ${completeBookingData.car.model}!\nTotal: $${completeBookingData.totalPrice}`);
     setShowBooking(false);
     setBookingData(null);
@@ -132,6 +155,7 @@ function App() {
       user={user} 
       onLogout={handleLogout}
       onBookNow={handleBookNow}
+      userBookings={userBookings}
     />
   );
 }

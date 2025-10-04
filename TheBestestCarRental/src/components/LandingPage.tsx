@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
+import './Bookings.css';
 import CarCard from './CarCard';
 import { useDatabase } from '../hooks/useDatabase';
 
@@ -8,15 +9,31 @@ interface User {
   name: string;
 }
 
+interface Booking {
+  id: string;
+  car: any;
+  pickupDate: string;
+  pickupTime: string;
+  dropoffDate: string;
+  dropoffTime: string;
+  totalPrice: number;
+  days: number;
+  payment: any;
+  user: User;
+  timestamp: string;
+}
+
 interface LandingPageProps {
   onSignInClick: () => void;
   user?: User | null;
   onLogout?: () => void;
   onBookNow?: (car: any, bookingDetails: any) => void;
+  userBookings?: Booking[];
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout, onBookNow }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout, onBookNow, userBookings = [] }) => {
   const { cars, isInitialized } = useDatabase();
+  const [activeTab, setActiveTab] = useState<'cars' | 'bookings'>('cars');
   const [pickupDate, setPickupDate] = useState('');
   const [pickupTime, setPickupTime] = useState('Noon');
   const [dropoffDate, setDropoffDate] = useState('');
@@ -121,8 +138,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
             <span className="logo-text">THE BESTEST</span>
           </div>
           <nav className="nav-menu">
-            <button className="nav-item active">Cars</button>
-            <button className="nav-item">My Bookings</button>          </nav>
+            <button 
+              className={`nav-item ${activeTab === 'cars' ? 'active' : ''}`}
+              onClick={() => setActiveTab('cars')}
+            >
+              Cars
+            </button>
+            <button 
+              className={`nav-item ${activeTab === 'bookings' ? 'active' : ''}`}
+              onClick={() => setActiveTab('bookings')}
+            >
+              My Bookings
+            </button>
+          </nav>
           <div className="header-actions">
             {user ? (
               <>
@@ -141,7 +169,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
       </header>
 
       <main className="landing-main">
-        <div className="hero-section">
+        {activeTab === 'cars' ? (
+          <>
+            <div className="hero-section">
           <h1 className="hero-title">
             Find the bestest car for you<span className="accent">.</span>
           </h1>
@@ -424,6 +454,90 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
             </div>
           )}
         </div>
+          </>
+        ) : (
+          <div className="bookings-section">
+            <h1 className="bookings-title">My Bookings</h1>
+            {!user ? (
+              <div className="bookings-empty">
+                <p>Please sign in to view your bookings</p>
+                <button className="signin-btn-large" onClick={onSignInClick}>
+                  Sign In
+                </button>
+              </div>
+            ) : userBookings.length === 0 ? (
+              <div className="bookings-empty">
+                <p>You don't have any bookings yet</p>
+                <button className="browse-cars-btn" onClick={() => setActiveTab('cars')}>
+                  Browse Cars
+                </button>
+              </div>
+            ) : (
+              <div className="bookings-grid">
+                {userBookings.map((booking) => (
+                  <div key={booking.id} className="booking-card">
+                    <div className="booking-card-header">
+                      <img 
+                        src={`/car_images/${booking.car.imageUrl}.jpg`} 
+                        alt={`${booking.car.make} ${booking.car.model}`}
+                        className="booking-car-image"
+                      />
+                      <div className="booking-car-info">
+                        <h3 className="booking-car-name">
+                          {booking.car.year} {booking.car.make} {booking.car.model}
+                        </h3>
+                        <p className="booking-car-details">
+                          {booking.car.size} • {booking.car.seats} seats • {booking.car.color}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="booking-card-body">
+                      <div className="booking-dates">
+                        <div className="booking-date-item">
+                          <label className="booking-label">Pick-up</label>
+                          <p className="booking-date">{booking.pickupDate}</p>
+                          <p className="booking-time">{booking.pickupTime}</p>
+                        </div>
+                        
+                        <div className="booking-arrow">→</div>
+                        
+                        <div className="booking-date-item">
+                          <label className="booking-label">Drop-off</label>
+                          <p className="booking-date">{booking.dropoffDate}</p>
+                          <p className="booking-time">{booking.dropoffTime}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="booking-summary">
+                        <div className="booking-summary-row">
+                          <span className="booking-summary-label">Duration</span>
+                          <span className="booking-summary-value">
+                            {booking.days} {booking.days === 1 ? 'day' : 'days'}
+                          </span>
+                        </div>
+                        <div className="booking-summary-row">
+                          <span className="booking-summary-label">Daily Rate</span>
+                          <span className="booking-summary-value">${booking.car.price}/day</span>
+                        </div>
+                        <div className="booking-summary-divider"></div>
+                        <div className="booking-summary-row booking-total">
+                          <span className="booking-summary-label">Total Paid</span>
+                          <span className="booking-summary-value">${booking.totalPrice}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="booking-card-footer">
+                        <span className="booking-id">Booking ID: {booking.id}</span>
+                        <span className="booking-status">Confirmed</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </main>
     </div>
     
