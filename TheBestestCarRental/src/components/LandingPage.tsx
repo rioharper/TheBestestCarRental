@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
+import CarCard from './CarCard';
 
 interface User {
   email: string;
@@ -13,12 +14,10 @@ interface LandingPageProps {
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout }) => {
-  const [pickupLocation, setPickupLocation] = useState('');
   const [pickupDate, setPickupDate] = useState('');
   const [pickupTime, setPickupTime] = useState('Noon');
   const [dropoffDate, setDropoffDate] = useState('');
   const [dropoffTime, setDropoffTime] = useState('Noon');
-  const [sameDropoff, setSameDropoff] = useState(true);
   const [selectedCarType, setSelectedCarType] = useState('all');
   const [priceRange, setPriceRange] = useState([10, 500]);
   const [seatCount, setSeatCount] = useState(2);
@@ -69,7 +68,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
 
   const handleSearch = () => {
     console.log('Search for cars:', {
-      pickupLocation,
       pickupDate,
       pickupTime,
       dropoffDate,
