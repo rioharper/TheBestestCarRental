@@ -7,6 +7,7 @@ Users:
 0|id|INTEGER|0||1
 1|email|TEXT|1||0
 2|password|TEXT|1||0
+3|name|TEXT|0||0
 
 
 Cars:
@@ -18,6 +19,8 @@ Cars:
 5|availability|INTEGER|1||0
 6|seats|INTEGER|1||0
 7|price|INTEGER|1||0
+8|image|TEXT|0||0
+9|color|TEXT|0||0
 
 Reservations:
 0|id|INTEGER|0||1
@@ -25,8 +28,10 @@ Reservations:
 2|endDate|TEXT|1||0
 3|status|INTEGER|1||0
 4|carId|INTEGER|1||0
+5|userId|INTEGER|1||0
 
 carId is a foreign key which links to Cars.id. 
+userId is a foreign key which links to users.id
 
 Admins:
 0|userID|INTEGER|0||1
