@@ -17,64 +17,9 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [driversLicense, setDriversLicense] = useState<File | null>(null);
-  const [driversLicensePreview, setDriversLicensePreview] = useState<string>('');
+  const [driversLicense, setDriversLicense] = useState('');
   const [loading, setLoading] = useState(false);
-  const [verificationLoading, setVerificationLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setError('Please upload an image file for your driver\'s license');
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('File size must be less than 5MB');
-        return;
-      }
-
-      setDriversLicense(file);
-      setError('');
-      setIsVerified(false);
-
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        setDriversLicensePreview(e.target?.result as string);
-        
-        // Automatically start verification after image loads
-        setVerificationLoading(true);
-        
-        try {
-          // Simulate license verification API call with 1.5 second delay
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          
-          // Mock verification - in reality, this would use AI/OCR to verify the license
-          const isValid = Math.random() > 0.1; // 90% success rate for demo
-          
-          if (isValid) {
-            setIsVerified(true);
-            setError('');
-          } else {
-            setError('Driver\'s license verification failed. Please ensure the image is clear and shows the front of your license.');
-            setIsVerified(false);
-          }
-        } catch (err) {
-          setError('Verification failed. Please try again.');
-          setIsVerified(false);
-        } finally {
-          setVerificationLoading(false);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,14 +57,8 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack }) => {
       return;
     }
 
-    if (!driversLicense) {
-      setError('Please upload your driver\'s license');
-      setLoading(false);
-      return;
-    }
-
-    if (!isVerified) {
-      setError('Please verify your driver\'s license before proceeding');
+    if (!driversLicense.trim()) {
+      setError('Please enter your driver\'s license number');
       setLoading(false);
       return;
     }
@@ -132,7 +71,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack }) => {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         email: email.trim(),
-        driversLicense: driversLicense.name
+        driversLicense: driversLicense.trim()
       };
       
       onSignUp(user);
@@ -221,49 +160,16 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="driversLicense">Driver's License (Front Image)</label>
-            <div className="license-upload-section">
-              <input
-                type="file"
-                id="driversLicense"
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="file-input"
-                required
-              />
-              <label htmlFor="driversLicense" className="file-input-label">
-                <svg className="upload-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                  <polyline points="17,8 12,3 7,8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                {driversLicense ? driversLicense.name : 'Choose file or drag and drop'}
-              </label>
-              
-              {driversLicensePreview && (
-                <div className="license-preview">
-                  <img src={driversLicensePreview} alt="Driver's License Preview" />
-                  <div className="verification-section">
-                    {verificationLoading ? (
-                      <div className="verification-loading">
-                        <div className="loading-spinner"></div>
-                        <p>Verifying license...</p>
-                      </div>
-                    ) : isVerified ? (
-                      <div className="verification-success">
-                        <div className="verified-badge">✓ License Verified</div>
-                        <p>Your driver's license has been successfully verified!</p>
-                      </div>
-                    ) : (
-                      <div className="verification-failed">
-                        <div className="failed-badge">✗ Verification Failed</div>
-                        <p>Please try uploading a clearer image of your license.</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+            <label htmlFor="driversLicense">Driver's License Number</label>
+            <input
+              type="text"
+              id="driversLicense"
+              value={driversLicense}
+              onChange={(e) => setDriversLicense(e.target.value.replace(/\D/g, ''))}
+              placeholder="Enter your license number"
+              maxLength={20}
+              required
+            />
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -271,7 +177,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack }) => {
           <button 
             type="submit" 
             className="signup-btn" 
-            disabled={loading || !isVerified}
+            disabled={loading}
           >
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>

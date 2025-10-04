@@ -4,9 +4,10 @@ import './LoginScreen.css';
 interface LoginScreenProps {
   onLogin: (user: { email: string; name: string }) => void;
   onBack?: () => void;
+  onSignUpClick?: () => void;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack, onSignUpClick }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -61,9 +62,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onBack }) => {
   };
 
   const handleCreateAccount = () => {
-    // TODO: Navigate to registration page
-    console.log('Navigate to registration page');
-    alert('Registration page will be implemented next!');
+    console.log('Create account clicked, onSignUpClick:', onSignUpClick);
+    if (onSignUpClick) {
+      onSignUpClick();
+    } else {
+      // Fallback for when onSignUpClick is not provided
+      console.log('Navigate to registration page');
+      alert('Registration page will be implemented next!');
+    }
   };
 
   return (

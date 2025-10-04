@@ -66,7 +66,13 @@ function App() {
   }
 
   if (showLogin && !user) {
-    return <LoginScreen onLogin={handleLogin} onBack={handleBackToLanding} onSignUpClick={handleSignUpClick} />;
+    return (
+      <LoginScreen 
+        onLogin={handleLogin} 
+        onBack={handleBackToLanding} 
+        onSignUpClick={handleSignUpClick} 
+      />
+    );
   }
 
   // Always show LandingPage, whether logged in or not
