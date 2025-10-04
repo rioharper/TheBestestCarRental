@@ -62,7 +62,7 @@ function App() {
   };
 
   if (showSignUp && !user) {
-    return <SignUpScreen onSignUp={handleSignUp} onBack={handleBackToLanding} />;
+    return <SignUpScreen onSignUp={handleSignUp} onBack={handleBackToLanding} onSignIn={handleSignInClick} />;
   }
 
   if (showLogin && !user) {

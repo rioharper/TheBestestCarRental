@@ -9,9 +9,10 @@ interface SignUpScreenProps {
     driversLicense: string;
   }) => void;
   onBack?: () => void;
+  onSignIn?: () => void;
 }
 
-const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack }) => {
+const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack, onSignIn }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -184,7 +185,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onBack }) => {
         </form>
 
         <div className="login-link">
-          <p>Already have an account? <span className="login-link-text">Sign in here</span></p>
+          <p>Already have an account? <span className="login-link-text" onClick={onSignIn}>Sign in here</span></p>
         </div>
       </div>
     </div>
