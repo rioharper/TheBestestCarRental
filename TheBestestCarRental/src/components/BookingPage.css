@@ -1,0 +1,370 @@
+.booking-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+/* Header Styles */
+.booking-header {
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.booking-header .header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.booking-header .back-btn {
+  background: none;
+  border: none;
+  color: #ff6b35;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  font-weight: 500;
+}
+
+.booking-header .back-btn:hover {
+  background: rgba(255, 107, 53, 0.1);
+  color: #e55a2b;
+}
+
+.booking-header .logo {
+  display: flex;
+  align-items: center;
+}
+
+.booking-header .logo-text {
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: white;
+  background: linear-gradient(45deg, #ff6b35, #ff8e53, #ff6b35, #ff8e53);
+  background-size: 400% 400%;
+  padding: 6px 12px;
+  border-radius: 4px;
+  animation: gradientShift 3s ease infinite;
+  letter-spacing: 0.5px;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.booking-header .header-spacer {
+  width: 120px; /* Balance the back button */
+}
+
+/* Main Content */
+.booking-main {
+  padding: 40px 20px;
+}
+
+.booking-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.booking-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+/* Grid Layout */
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 968px) {
+  .booking-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Section Cards */
+.section-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* Car Summary */
+.car-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.car-summary-image {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.car-summary-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.car-summary-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 6px 0;
+}
+
+.car-summary-details {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+/* Rental Period */
+.rental-period {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.period-item {
+  flex: 1;
+}
+
+.period-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.period-value {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.period-date {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.period-time {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.period-divider {
+  font-size: 1.5rem;
+  color: #ff6b35;
+  font-weight: bold;
+}
+
+/* Price Summary */
+.price-summary {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.price-row:last-child {
+  margin-bottom: 0;
+}
+
+.price-label {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.price-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.price-divider {
+  height: 1px;
+  background: #ddd;
+  margin: 16px 0;
+}
+
+.price-total {
+  margin-top: 8px;
+}
+
+.price-total .price-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.price-total .price-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ff6b35;
+}
+
+/* Payment Form */
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.form-input.error {
+  border-color: #e74c3c;
+}
+
+.form-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Confirm Button */
+.confirm-booking-btn {
+  background: linear-gradient(135deg, #ff6b35, #ff8e53);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px;
+}
+
+.confirm-booking-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+}
+
+.confirm-booking-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .booking-main {
+    padding: 20px 12px;
+  }
+
+  .booking-title {
+    font-size: 1.5rem;
+  }
+
+  .section-card {
+    padding: 20px;
+  }
+
+  .car-summary {
+    flex-direction: column;
+  }
+
+  .car-summary-image {
+    width: 100%;
+    height: 180px;
+  }
+
+  .rental-period {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .period-divider {
+    transform: rotate(90deg);
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

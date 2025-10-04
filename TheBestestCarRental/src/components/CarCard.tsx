@@ -12,9 +12,11 @@ interface CarCardProps {
   price: number;
   color: string;
   imageUrl: string;
+  onBookNow?: (car: CarCardProps) => void;
 }
 
 const CarCard: React.FC<CarCardProps> = ({
+  id,
   make,
   model,
   price,
@@ -22,9 +24,16 @@ const CarCard: React.FC<CarCardProps> = ({
   seats,
   imageUrl,
   year,
-  size
+  size,
+  onBookNow
 }) => {
   const [isFavorite, setIsFavorite] = React.useState(false);
+
+  const handleBookNow = () => {
+    if (onBookNow) {
+      onBookNow({ id, year, size, make, model, seats, price, color, imageUrl });
+    }
+  };
 
   return (
     <div className="car-card">
@@ -66,7 +75,7 @@ const CarCard: React.FC<CarCardProps> = ({
             <span className="car-card-price">${price}</span>
             <span className="car-card-price-period">/day</span>
           </div>
-          <button className="car-card-book-btn">
+          <button className="car-card-book-btn" onClick={handleBookNow}>
             <Car size={18} className="car-card-book-icon" />
             Book Now
           </button>

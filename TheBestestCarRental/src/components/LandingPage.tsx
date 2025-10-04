@@ -12,9 +12,10 @@ interface LandingPageProps {
   onSignInClick: () => void;
   user?: User | null;
   onLogout?: () => void;
+  onBookNow?: (car: any, bookingDetails: any) => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout, onBookNow }) => {
   const { cars, isInitialized } = useDatabase();
   const [pickupDate, setPickupDate] = useState('');
   const [pickupTime, setPickupTime] = useState('Noon');
@@ -81,6 +82,28 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
       selectedBrands
     });
     // TODO: Implement search functionality
+  };
+
+  const handleCarBookNow = (car: any) => {
+    if (!user) {
+      alert('Please sign in to book a car');
+      onSignInClick();
+      return;
+    }
+
+    if (!pickupDate || !dropoffDate) {
+      alert('Please select pickup and drop-off dates before booking');
+      return;
+    }
+
+    if (onBookNow) {
+      onBookNow(car, {
+        pickupDate,
+        pickupTime,
+        dropoffDate,
+        dropoffTime
+      });
+    }
   };
 
   return (
@@ -386,6 +409,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
                   color={car.color}
                   seats={car.seats}
                   imageUrl={car.imageUrl}
+                  onBookNow={handleCarBookNow}
                 />
               ))}
             </div>
