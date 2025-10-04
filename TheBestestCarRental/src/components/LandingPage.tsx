@@ -39,7 +39,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
   const colors = [
     { id: 'black', name: 'Black', color: '#000000' },
     { id: 'white', name: 'White', color: '#FFFFFF' },
-    { id: 'silver', name: 'Silver', color: '#C0C0C0' },
+  { id: 'grey', name: 'Grey', color: '#C0C0C0' },
     { id: 'red', name: 'Red', color: '#DC143C' },
     { id: 'blue', name: 'Blue', color: '#1E90FF' },
   ];
@@ -47,9 +47,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
   const brands = [
     { id: 'toyota', name: 'Toyota' },
     { id: 'ford', name: 'Ford' },
-    { id: 'chevrolet', name: 'Chevrolet' },
+    { id: 'tesla', name: 'Tesla' },
     { id: 'honda', name: 'Honda' },
-    { id: 'nissan', name: 'Nissan' },
+    { id: 'hyundai', name: 'Hyundai' },
     { id: 'bmw', name: 'BMW' },
   ];
 
