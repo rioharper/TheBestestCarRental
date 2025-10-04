@@ -1,6 +1,7 @@
 import initSqlJs, { type Database } from 'sql.js';
 
 let db: Database | null = null;
+const DB_STORAGE_KEY = 'carRentalDatabase';
 
 export interface User {
   id: number;
@@ -22,6 +23,36 @@ export interface Car {
   imageUrl: string;
 }
 
+// Save database to localStorage
+function saveDatabase(): void {
+  if (!db) return;
+  
+  try {
+    const data = db.export();
+    const buffer = Array.from(data);
+    localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(buffer));
+    console.log('Database saved to localStorage');
+  } catch (error) {
+    console.error('Error saving database to localStorage:', error);
+  }
+}
+
+// Load database from localStorage
+function loadDatabaseFromStorage(SQL: any): Database | null {
+  try {
+    const stored = localStorage.getItem(DB_STORAGE_KEY);
+    if (stored) {
+      const buffer = new Uint8Array(JSON.parse(stored));
+      const loadedDb = new SQL.Database(buffer);
+      console.log('Database loaded from localStorage');
+      return loadedDb;
+    }
+  } catch (error) {
+    console.error('Error loading database from localStorage:', error);
+  }
+  return null;
+}
+
 export async function initDatabase(): Promise<Database> {
   if (db) return db;
 
@@ -29,13 +60,22 @@ export async function initDatabase(): Promise<Database> {
     locateFile: (file) => `https://sql.js.org/dist/${file}`
   });
 
-  // Load the existing database file
+  // First, try to load from localStorage (persisted data)
+  db = loadDatabaseFromStorage(SQL);
+  
+  if (db) {
+    return db;
+  }
+
+  // If not in localStorage, try to load the initial database file
   try {
     const response = await fetch('/datebase.db');
     if (response.ok) {
       const buffer = await response.arrayBuffer();
       db = new SQL.Database(new Uint8Array(buffer));
       console.log('Database loaded from datebase.db');
+      // Save to localStorage for future use
+      saveDatabase();
     } else {
       console.warn('Could not load datebase.db, creating new database');
       db = new SQL.Database();
@@ -81,11 +121,15 @@ export async function initDatabase(): Promise<Database> {
         (5, 'Chevrolet', 'Suburban', 2023, 95.00, 1, 'SUV', 'red', 7, 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500'),
         (6, 'Nissan', 'Altima', 2023, 42.00, 1, 'Sedan', 'white', 5, 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=500')
       `);
+      
+      // Save the initial database to localStorage
+      saveDatabase();
     }
   } catch (error) {
     console.error('Error loading database:', error);
     // Fallback to creating a new database
     db = new SQL.Database();
+    saveDatabase();
   }
 
   return db;
@@ -152,6 +196,9 @@ export function createUser(email: string, password: string, name: string): User 
   // Insert new user
   db.run('INSERT INTO users (email, password, name) VALUES (?, ?, ?)', [email, password, name]);
   
+  // Save database to localStorage after creating user
+  saveDatabase();
+  
   // Return the newly created user
   return getUserByEmail(email);
 }
@@ -193,4 +240,20 @@ export function getAvailableCars(): Car[] {
     seats: row[6] as number,
     imageUrl: row[8] as string,
   }));
+}
+
+// Utility function to clear stored database (useful for testing/reset)
+export function clearStoredDatabase(): void {
+  try {
+    localStorage.removeItem(DB_STORAGE_KEY);
+    console.log('Stored database cleared from localStorage');
+  } catch (error) {
+    console.error('Error clearing stored database:', error);
+  }
+}
+
+// Export database as downloadable file (optional utility)
+export function exportDatabase(): Uint8Array | null {
+  if (!db) return null;
+  return db.export();
 }
