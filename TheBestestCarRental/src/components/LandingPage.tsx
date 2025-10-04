@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
 import CarCard from './CarCard';
+import { useDatabase } from '../hooks/useDatabase';
 
 interface User {
   email: string;
@@ -14,6 +15,7 @@ interface LandingPageProps {
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout }) => {
+  const { cars, isInitialized } = useDatabase();
   const [pickupDate, setPickupDate] = useState('');
   const [pickupTime, setPickupTime] = useState('Noon');
   const [dropoffDate, setDropoffDate] = useState('');
@@ -334,23 +336,29 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSignInClick, user, onLogout
           </div>
         </div>
         <div className="car-results-section">
-          <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Available Cars</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <CarCard
-            id="1"
-            brand="Toyota"
-            model="Camry"
-            price={45}
-            color="Blue"
-            seats={5}
-            imageUrl="https://example.com/toyota-camry.jpg"
-          />
-        </div>
-      </div>
-    </div>
-         
+          <h1>Available Cars</h1>
+          {!isInitialized ? (
+            <p>Loading cars...</p>
+          ) : cars.length === 0 ? (
+            <p>No cars available at the moment.</p>
+          ) : (
+            <div className="car-grid">
+              {cars.map((car) => (
+                <CarCard
+                  key={car.id}
+                  id={car.id.toString()}
+                  make={car.make}
+                  model={car.model}
+                  year={car.year}
+                  size={car.size}
+                  price={car.price}
+                  color={car.color}
+                  seats={car.seats}
+                  imageUrl={car.imageUrl}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>
