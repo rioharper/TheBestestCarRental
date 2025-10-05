@@ -1,45 +1,18 @@
-The database.db tables are set up as so:
+This is our model car rental website, admin user name is aohartma@syr.edu, pw is Secure142. Example user is example@example.com, pw is example. 
 
-For tables the columns are as follows:
-cid | name | type| notnull | dflt_value | pk
+## Running the Project
 
-Users:
-0|id|INTEGER|0||1
-1|email|TEXT|1||0
-2|password|TEXT|1||0
-3|name|TEXT|0||0
+1. Navigate to the project folder:
+   ```bash
+   cd TheBestestCarRental/TheBestestCarRental
+   ```
 
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Cars:
-0|id|INTEGER|0||1
-1|year|INTEGER|1||0
-2|size|TEXT|1||0
-3|make|TEXT|1||0
-4|model|TEXT|1||0
-5|availability|INTEGER|1||0
-6|seats|INTEGER|1||0
-7|price|INTEGER|1||0
-8|image|TEXT|0||0
-9|color|TEXT|0||0
-
-Reservations:
-0|id|INTEGER|0||1
-1|startDate|TEXT|1||0
-2|endDate|TEXT|1||0
-3|status|INTEGER|1||0
-4|carId|INTEGER|1||0
-5|userId|INTEGER|1||0
-
-carId is a foreign key which links to Cars.id. 
-userId is a foreign key which links to users.id
-
-Admins:
-0|userID|INTEGER|0||1
-
-userId is also foreign, links to users.id
-
-Customers
-0|userID|INTEGER|0||1
-1|driversLicenseNumber|INTEGER|1||0
-
-userID also links to users.id, same as admin
+3. To run the website:
+   ```bash
+   npm run dev
+   ```
